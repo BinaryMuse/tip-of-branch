@@ -2,20 +2,8 @@ const fs = require('fs')
 const { Toolkit } = require('actions-toolkit')
 
 const options = {
+  secrets: [ 'GITHUB_TOKEN' ]
 }
-
-const envKeys = [
-  'GITHUB_WORKFLOW',
-  'GITHUB_ACTION',
-  'GITHUB_ACTOR',
-  'GITHUB_REPOSITORY',
-  'GITHUB_EVENT_NAME',
-  'GITHUB_EVENT_PATH',
-  'GITHUB_WORKSPACE',
-  'GITHUB_SHA',
-  'GITHUB_REF',
-  'GITHUB_TOKEN',
-]
 
 // Run your GitHub Action!
 Toolkit.run(async tools => {

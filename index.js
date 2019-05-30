@@ -42,14 +42,14 @@ Toolkit.run(async tools => {
     if (useRegex) {
       const regex = new RegExp(branch, regexFlags)
       if (regex.test(eventBranch)) {
-        tools.exit.success(`Event branch ${eventBranch} matches pattern ${branch}`)
+        tools.exit.success(`Event branch '${eventBranch}' matches`)
       }
     } else {
       if (branch === eventBranch) {
-        tools.exit.success(`Event branch ${eventBranch} matches check ${branch}`)
+        tools.exit.success(`Event branch '${eventBranch}' matches`)
       }
     }
   }
 
-  tools.exit.neutral(`Event branch ${eventBranch} matched no given patterns`)
+  tools.exit.neutral(`Event branch '${eventBranch}' did not match`)
 }, options)

@@ -24,8 +24,8 @@ Toolkit.run(async tools => {
     tools.log(`${key}: ${process.env[key]}`)
   }
   tools.log('\nPrinting event payload:')
-  const payload = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')
-  tools.log(payload)
+  const payload = require(process.env.GITHUB_EVENT_PATH, 'utf8')
+  tools.log(JSON.stringify(payload, null, '  '))
 
   tools.exit.success('We did it!')
 }, options)

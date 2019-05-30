@@ -55,6 +55,7 @@ Toolkit.run(async tools => {
         tools.exit.success(`Branch '${eventBranch}' matches`)
       } catch (err) {
         tools.log(`Error getting tip of ref info for refs/${eventBranch}: ${err}`)
+        tools.exit.falure(`Could not get the tip of refs/${eventBranch}`)
       }
     }
   }

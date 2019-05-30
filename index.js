@@ -36,14 +36,14 @@ Toolkit.run(async tools => {
           repo: repo.name,
           ref: `heads/${eventBranch}`
         })
-        const tipOfBranchSha = tipOfBranchJson.object.sha
+        const tipOfBranchSha = tipOfBranchJson.data.object.sha
         if (tipOfBranchSha !== process.env.GITHUB_SHA) {
           tools.exit.neutral(`The commit that triggered this action is no longer at the tip of ${eventBranch}`)
         }
         tools.exit.success(`Branch '${eventBranch}' matches`)
       } catch (err) {
         tools.log(`Error getting tip of ref info for refs/${eventBranch}: ${err}`)
-        tools.exit.falure(`Could not get the tip of refs/${eventBranch}`)
+        tools.exit.failure(`Could not get the tip of refs/${eventBranch}`)
       }
     }
   }

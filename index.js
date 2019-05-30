@@ -21,6 +21,10 @@ const envKeys = [
 Toolkit.run(async tools => {
   const payload = require(process.env.GITHUB_EVENT_PATH, 'utf8')
   const eventRef = payload.ref
+  const repo = {
+    owner: payload.repository.owner.login,
+    name: payload.repository.name
+  }
 
   if (!eventRef.startsWith('refs/heads/')) {
     tools.exit.neutral(`Action not triggered by a branch ref (${eventRef})`)
@@ -35,21 +39,25 @@ Toolkit.run(async tools => {
   const eventBranch = eventRef.replace('refs/heads/', '')
 
   const branches = tools.arguments._
-  const useRegex = tools.arguments.regex
-  const regexFlags = tools.arguments.flags || ''
 
   for (const branch of branches) {
-    if (useRegex) {
-      const regex = new RegExp(branch, regexFlags)
-      if (regex.test(eventBranch)) {
-        tools.exit.success(`Event branch '${eventBranch}' matches`)
-      }
-    } else {
-      if (branch === eventBranch) {
-        tools.exit.success(`Event branch '${eventBranch}' matches`)
+    if (branch === eventBranch) {
+      try {
+        const tipOfBranchJson = await tools.github.git.getRef({
+          owner: repo.owner,
+          name: repo.name,
+          ref: `heads/${eventBranch}`
+        })
+        const tipOfBranchSha = tipOfBranchJson.object.sha
+        if (tipOfBranchSha !== process.env.GITHUB_SHA) {
+          tools.exit.neutral(`The commit that triggered this action is no longer at the tip of ${eventBranch}`)
+        }
+        tools.exit.success(`Branch '${eventBranch}' matches`)
+      } catch (err) {
+        tools.log(`Error getting tip of ref info for refs/${eventBranch}: ${err}`)
       }
     }
   }
 
-  tools.exit.neutral(`Event branch '${eventBranch}' did not match`)
+  tools.exit.neutral(`Branch '${eventBranch}' did not match`)
 }, options)

@@ -5,7 +5,6 @@ const options = {
   secrets: [ 'GITHUB_TOKEN' ]
 }
 
-// Run your GitHub Action!
 Toolkit.run(async tools => {
   const payload = require(process.env.GITHUB_EVENT_PATH, 'utf8')
   const eventRef = payload.ref
@@ -40,7 +39,7 @@ Toolkit.run(async tools => {
         if (tipOfBranchSha !== process.env.GITHUB_SHA) {
           tools.exit.neutral(`The commit that triggered this action is no longer at the tip of ${eventBranch}`)
         }
-        tools.exit.success(`Branch '${eventBranch}' matches`)
+        tools.exit.success(`Branch '${eventBranch}' matches and ${process.env.GITHUB_SHA} is at its tip`)
       } catch (err) {
         tools.log(`Error getting tip of ref info for refs/${eventBranch}: ${err}`)
         tools.exit.failure(`Could not get the tip of refs/${eventBranch}`)

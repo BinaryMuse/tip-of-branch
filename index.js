@@ -45,7 +45,7 @@ Toolkit.run(async tools => {
       try {
         const tipOfBranchJson = await tools.github.git.getRef({
           owner: repo.owner,
-          name: repo.name,
+          repo: repo.name,
           ref: `heads/${eventBranch}`
         })
         const tipOfBranchSha = tipOfBranchJson.object.sha

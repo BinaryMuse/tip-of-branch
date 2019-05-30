@@ -19,13 +19,37 @@ const envKeys = [
 
 // Run your GitHub Action!
 Toolkit.run(async tools => {
-  tools.log('Printing environment variables:')
-  for (const key of envKeys) {
-    tools.log(`${key}: ${process.env[key]}`)
-  }
-  tools.log('\nPrinting event payload:')
   const payload = require(process.env.GITHUB_EVENT_PATH, 'utf8')
-  tools.log(JSON.stringify(payload, null, '  '))
+  const eventRef = payload.ref
 
-  tools.exit.success('We did it!')
+  if (!eventRef.startsWith('refs/heads/')) {
+    tools.exit.neutral(`Action not triggered by a branch ref (${eventRef})`)
+  }
+
+  const deleted = payload.deleted
+
+  if (deleted) {
+    tools.exit.neutral('Action triggered by a delete event')
+  }
+
+  const eventBranch = eventRef.replace('refs/heads/', '')
+
+  const branches = tools.arguments._
+  const useRegex = tools.arguments.regex
+  const regexFlags = tools.arguments.flags || ''
+
+  for (const branch of branches) {
+    if (useRegex) {
+      const regex = new RegExp(branch, regexFlags)
+      if (regex.test(eventBranch)) {
+        tools.exit.success(`Event branch ${eventBranch} matches pattern ${branch}`)
+      }
+    } else {
+      if (branch === eventBranch) {
+        tools.exit.success(`Event branch ${eventBranch} matches check ${branch}`)
+      }
+    }
+  }
+
+  tools.exit.neutral(`Event branch ${eventBranch} matched no given patterns`)
 }, options)

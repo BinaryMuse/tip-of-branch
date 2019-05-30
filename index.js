@@ -2,6 +2,7 @@ const fs = require('fs')
 const { Toolkit } = require('actions-toolkit')
 
 const options = {
+  event: 'push',
   secrets: [ 'GITHUB_TOKEN' ]
 }
 

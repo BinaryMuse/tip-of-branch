@@ -14,7 +14,7 @@ In your workflow:
 
 ```workflow
 action "your-action" {
-  uses = "BinaryMuse/tip-of-branch@stable"
+  uses = "BinaryMuse/tip-of-branch@master"
   args = "master"
   secrets = [ "GITHUB_TOKEN" ]
 }
@@ -24,7 +24,7 @@ action "your-action" {
 
 ```workflow
 action "your-action" {
-  uses = "BinaryMuse/tip-of-branch@stable"
+  uses = "BinaryMuse/tip-of-branch@master"
   args = [ "master", "some-other-branch" ]
   secrets = [ "GITHUB_TOKEN" ]
 }
